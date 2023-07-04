@@ -22,9 +22,9 @@ class Bruter:
     def __init__(self, args, words) -> str:
         self.args = args
         self.words = words
+        self.result = []
 
     # 发起请求
-
     def dir_bruter(self):
         while not self.words.empty():
             url = f'{self.args.url}{self.words.get()}'
@@ -36,29 +36,34 @@ class Bruter:
                 }
                 if self.args.proxy:
                     r = requests.get(url, headers=headers,
-                                     proxies=self.proxies())
+                                     proxies=self.proxies(), verify=False)
                 else:
                     r = requests.get(url, headers=headers)
 
                 if r.status_code == 200:
                     print(f'[*] Seccess {url}: {r.status_code}')
+                    
                 elif r.status_code == 404 or 403:
-                    print(f'[-] Faided {url}: {r.status_code}')
+                    print('[!!!!]')
                 else:
                     print(f'[+] {url}: {r.status_code}')
             except Exception as e:
                 print(f'[!] Error {e}')
                 break
 
-    # 请求线程数
+    #保存结果
+    """  def results(self):
+        with open(os.getcwd()+'results.txt', 'a') as f:
+            for r in self.result:
+                f.write(r.strip()) """
 
+    # 请求线程数
     def thread(self):
         for _ in range(self.args.thread):
             t = threading.Thread(target=self.dir_bruter)
             t.start()
 
     # 使用代理
-
     def proxies(self):
         try:
             if '@' in self.args.proxy:
@@ -97,7 +102,7 @@ def main():
         bruter = Bruter(args, get_words(args.file, words))
         bruter.thread()
     else:
-        wordlist = os.getcwd()+'/php.txt'
+        wordlist = os.getcwd()+'/dicc.txt'
         bruter = Bruter(args, get_words(wordlist, words))
         bruter.thread()
 
