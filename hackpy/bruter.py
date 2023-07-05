@@ -6,6 +6,7 @@ import queue
 import requests
 import argparse
 import textwrap
+import random
 
 
 def get_words(wordlist, words):
@@ -22,17 +23,20 @@ class Bruter:
     def __init__(self, args, words) -> str:
         self.args = args
         self.words = words
-        self.result = []
-
+    
     # 发起请求
     def dir_bruter(self):
+
+        # 导入user-agent
+        with open(os.getcwd()+'user-agents.txt') as f:
+                agent = f.readlines()
+
         while not self.words.empty():
             url = f'{self.args.url}{self.words.get()}'
 
             try:
                 headers = {
-                    'User-Agent':
-                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+                    'User-Agent': random.choice(agent)
                 }
                 if self.args.proxy:
                     r = requests.get(url, headers=headers,
