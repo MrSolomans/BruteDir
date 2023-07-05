@@ -23,20 +23,22 @@ class Bruter:
     def __init__(self, args, words) -> str:
         self.args = args
         self.words = words
+        self.agent = []
     
     # 发起请求
     def dir_bruter(self):
 
         # 导入user-agent
-        with open(os.getcwd()+'user-agents.txt') as f:
-                agent = f.readlines()
+        with open(os.getcwd()+'/user-agents.txt') as f:
+            for i in f.readlines():
+                self.agent.append(i.strip())
 
         while not self.words.empty():
             url = f'{self.args.url}{self.words.get()}'
 
             try:
                 headers = {
-                    'User-Agent': random.choice(agent)
+                    'User-Agent': random.choice(self.agent)
                 }
                 if self.args.proxy:
                     r = requests.get(url, headers=headers,
