@@ -42,7 +42,8 @@ class Bruter:
 
                 if r.status_code == 200:
                     print(f'[*] Seccess {url}: {r.status_code}')
-                    
+                    with open(os.getcwd()+'results.txt', 'a') as f:
+                        f.write(f'{url}\n')
                 elif r.status_code == 404 or 403:
                     print('[!!!!]')
                 else:
@@ -51,17 +52,15 @@ class Bruter:
                 print(f'[!] Error {e}')
                 break
 
-    #保存结果
-    """  def results(self):
-        with open(os.getcwd()+'results.txt', 'a') as f:
-            for r in self.result:
-                f.write(r.strip()) """
+
+       
 
     # 请求线程数
     def thread(self):
         for _ in range(self.args.thread):
             t = threading.Thread(target=self.dir_bruter)
             t.start()
+        
 
     # 使用代理
     def proxies(self):
